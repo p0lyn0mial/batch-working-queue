@@ -71,7 +71,7 @@ func (q *queue) Done(key string) {
 	}
 
 	q.store[key] = q.dirty[key]
-	q.dirty[key] = []interface{}{}
+	delete(q.dirty, key)
 	q.q = append(q.q, key)
 	q.inProgress.Delete(key)
 }
