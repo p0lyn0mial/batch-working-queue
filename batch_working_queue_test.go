@@ -23,7 +23,7 @@ func TestBatchWorkingQueue(t *testing.T) {
 		name  string
 		steps []*step
 	}{
-		{name: "get and done on empty queue works", steps: []*step{{get: validateGet("", 0), doneKey: "1"}}},
+		{name: "get and done on empty Queue works", steps: []*step{{get: validateGet("", 0), doneKey: "1"}}},
 		{
 			name: "single item",
 			steps: []*step{

@@ -8,7 +8,7 @@ import (
 
 type keyFunc func(obj interface{}) string
 
-type queue struct {
+type Queue struct {
 	keyFn keyFunc
 	lock  sync.Mutex
 
@@ -19,8 +19,8 @@ type queue struct {
 	q []string
 }
 
-func New(keyFn keyFunc) *queue {
-	return &queue{
+func New(keyFn func(obj interface{}) string) *Queue {
+	return &Queue{
 		keyFn:      keyFn,
 		store:      map[string][]interface{}{},
 		dirty:      map[string][]interface{}{},
@@ -28,7 +28,7 @@ func New(keyFn keyFunc) *queue {
 	}
 }
 
-func (q *queue) Add(item interface{}) {
+func (q *Queue) Add(item interface{}) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	key := q.keyFn(item)
@@ -42,11 +42,11 @@ func (q *queue) Add(item interface{}) {
 	q.store[key] = append(q.store[key], item)
 }
 
-func (q *queue) Get() (key string, items []interface{}) {
+func (q *Queue) Get() (key string, items []interface{}) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 	if len(q.q) == 0 {
-		// TODO: block until we have something in queue ?
+		// TODO: block until we have something in Queue ?
 		return "", nil
 	}
 	workKey := q.q[0]
@@ -58,7 +58,7 @@ func (q *queue) Get() (key string, items []interface{}) {
 	return workKey, work
 }
 
-func (q *queue) Done(key string) {
+func (q *Queue) Done(key string) {
 	q.lock.Lock()
 	defer q.lock.Unlock()
 
@@ -75,3 +75,4 @@ func (q *queue) Done(key string) {
 	q.q = append(q.q, key)
 	q.inProgress.Delete(key)
 }
+
