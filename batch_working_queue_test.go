@@ -63,10 +63,10 @@ func TestBatchWorkingQueue(t *testing.T) {
 		t.Run(scenario.name, func(t *testing.T) {
 			// test data
 
-			target := New(defaultKeyFunc)
+			target := New()
 			for _, step := range scenario.steps {
 				if step.add != nil {
-					target.Add(step.add)
+					target.Add(defaultKeyFunc(step.add), step.add)
 				}
 				if step.get != nil {
 					workKey, work := target.Get()
